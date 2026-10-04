@@ -1,0 +1,21 @@
+<header class="site-header">
+    <div class="site-header-inner">
+        <a href="products.jsp" class="site-brand">
+            <span class="brand-mark" aria-hidden="true">W</span>
+            Webshop
+        </a>
+
+        <nav class="header-actions" aria-label="Account and cart">
+            <%@ include file="/WEB-INF/views/auth-status.jspf" %>
+
+            <button type="button" id="open-cart"
+                    class="cart-button"
+                    aria-haspopup="dialog"
+                    aria-controls="cart-panel">
+                <span aria-hidden="true">&#128722;</span>
+                Cart
+                <span class="cart-badge"><%= cart.getItemCount() %></span>
+            </button>
+        </nav>
+    </div>
+</header>

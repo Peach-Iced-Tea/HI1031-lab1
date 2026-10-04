@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<% %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,5 +10,6 @@
     <h1>Welcome to our webshop!</h1>
     <p>Tomcat and JSP are working.</p>
     <p>Server time: <%= java.time.LocalDateTime.now() %></p>
+    <button>Sign In</button>
 </body>
 </html>

@@ -1,0 +1,16 @@
+<% if (session.getAttribute("userId") == null) { %>
+    <a href="login.jsp"
+   class="button button-secondary"
+   data-login-trigger>
+    Log in
+</a>
+<% } else { %>
+    <span class="account-status">Signed in</span>
+
+    <form action="logout.jsp" method="post" class="inline-form">
+        <input type="hidden" name="token" value="<%= cartToken %>">
+        <button type="submit" class="button button-secondary">
+            Log out
+        </button>
+    </form>
+<% } %>

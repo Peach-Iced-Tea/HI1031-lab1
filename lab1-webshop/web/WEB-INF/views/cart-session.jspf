@@ -1,0 +1,16 @@
+<jsp:useBean id="cart"
+             class="se.kth.webshop.model.Cart"
+             scope="session" />
+
+<%
+    String cartToken;
+
+    synchronized (session) {
+        cartToken = (String) session.getAttribute("cartToken");
+
+        if (cartToken == null) {
+            cartToken = java.util.UUID.randomUUID().toString();
+            session.setAttribute("cartToken", cartToken);
+        }
+    }
+%>

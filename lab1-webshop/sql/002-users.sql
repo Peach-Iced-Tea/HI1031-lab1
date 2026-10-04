@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL
+);
+
+INSERT INTO users (username, password_hash)
+VALUES ('neo', 'CjzpGaKdcat/5o1wr1Z7YA==:GXjpDrNuM0znzOBJEUS2Iv1Vkak90smOJMs0nj1AL7Q=')
+ON CONFLICT (username) DO NOTHING;

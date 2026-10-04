@@ -1,0 +1,95 @@
+<%
+    var panelItems = cart.getItems();
+    long panelTotal = 0;
+
+    for (var panelItem : panelItems) {
+        panelTotal += panelItem.getSubtotal();
+    }
+%>
+
+<dialog id="cart-panel" class="cart-panel"
+        aria-labelledby="cart-panel-title">
+
+    <header class="cart-panel-header">
+        <h2 id="cart-panel-title">Your cart</h2>
+        <button type="button" id="close-cart" autofocus>
+            Close
+        </button>
+    </header>
+
+    <% if (request.getParameter("cartError") != null) { %>
+        <p class="cart-error" role="alert">
+            Could not update the cart. Use a quantity between
+            1 and 99, or try again.
+        </p>
+    <% } %>
+
+    <% if (panelItems.isEmpty()) { %>
+        <p>Your cart is empty. Add something from the product list!</p>
+    <% } else { %>
+        <ul class="cart-items">
+            <% for (var panelItem : panelItems) { %>
+                <li class="cart-item">
+                    <h3>
+                        <%= escapeHtml(panelItem.getProduct().getName()) %>
+                    </h3>
+
+                    <p>
+                        <%= panelItem.getProduct().getPrice() %> SEK each
+                    </p>
+
+                    <form action="cart-action.jsp" method="post"
+                          class="cart-quantity-form">
+
+                        <input type="hidden" name="token"
+                               value="<%= cartToken %>">
+                        <input type="hidden" name="action" value="update">
+                        <input type="hidden" name="returnTo" value="products">
+                        <input type="hidden" name="productId"
+                               value="<%= panelItem.getProduct().getId() %>">
+
+                        <label>
+                            Quantity
+                            <input type="number" name="quantity"
+                                   value="<%= panelItem.getQuantity() %>"
+                                   min="1" max="99" required>
+                        </label>
+
+                        <button type="submit">Update</button>
+                    </form>
+
+                    <div class="cart-item-bottom">
+                        <strong>
+                            <%= panelItem.getSubtotal() %> SEK
+                        </strong>
+
+                        <form action="cart-action.jsp" method="post">
+                            <input type="hidden" name="token"
+                                   value="<%= cartToken %>">
+                            <input type="hidden" name="action" value="remove">
+                            <input type="hidden" name="returnTo"
+                                   value="products">
+                            <input type="hidden" name="productId"
+                                   value="<%= panelItem.getProduct().getId() %>">
+
+                            <button type="submit" class="cart-remove">
+                                Remove
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            <% } %>
+        </ul>
+    <% } %>
+
+    <footer class="cart-panel-footer">
+        <p class="cart-total">
+            <span>Total</span>
+            <strong><%= panelTotal %> SEK</strong>
+        </p>
+
+        <a href="cart.jsp" class="cart-overview-link">
+            Review cart &amp; checkout
+        </a>
+    </footer>
+</dialog>

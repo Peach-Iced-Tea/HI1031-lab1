@@ -1,0 +1,419 @@
+:root {
+    --shop-background: #f5f6f2;
+    --shop-surface: #ffffff;
+    --shop-text: #202d26;
+    --shop-muted: #637067;
+    --shop-green: #173b32;
+    --shop-border: #dde4dc;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--shop-background);
+    color: var(--shop-text);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.5;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+a {
+    color: var(--shop-green);
+}
+
+button,
+a,
+input {
+    -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+    outline: 3px solid #2677c9;
+    outline-offset: 3px;
+}
+
+.site-header {
+    background: var(--shop-surface);
+    border-bottom: 1px solid var(--shop-border);
+}
+
+.site-header-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.site-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--shop-green);
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 750;
+}
+
+.brand-mark {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    background: var(--shop-green);
+    color: white;
+    font-size: 1rem;
+}
+
+.header-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.inline-form {
+    margin: 0;
+}
+
+.account-status {
+    color: var(--shop-muted);
+    font-size: 0.9rem;
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.65rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.6rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+
+.button-primary {
+    background: var(--shop-green);
+    color: white;
+}
+
+.button-primary:hover {
+    background: #255647;
+}
+
+.button-secondary {
+    background: white;
+    color: var(--shop-green);
+    border-color: var(--shop-border);
+}
+
+.button-secondary:hover {
+    background: #edf2ed;
+}
+
+.page-container {
+    max-width: 1160px;
+    min-height: 70vh;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+}
+
+.catalog-intro {
+    padding: 3.5rem 0 2.5rem;
+    max-width: 720px;
+}
+
+.eyebrow {
+    margin: 0 0 0.8rem;
+    color: var(--shop-green);
+    font-size: 0.75rem;
+    font-weight: 750;
+    letter-spacing: 0.15em;
+}
+
+.catalog-intro h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.3rem);
+    line-height: 1.12;
+    letter-spacing: -0.04em;
+}
+
+.intro-description {
+    max-width: 540px;
+    margin: 1.2rem 0 0;
+    color: var(--shop-muted);
+    font-size: 1.05rem;
+}
+
+.section-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.section-heading span {
+    color: var(--shop-muted);
+    font-size: 0.9rem;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 1.25rem;
+}
+
+.product-card {
+    display: flex;
+    min-width: 0;
+    background: var(--shop-surface);
+    border: 1px solid var(--shop-border);
+    border-top: 4px solid #b6cbb9;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgb(23 59 50 / 4%);
+}
+
+.product-card-body {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1.5rem;
+}
+
+.product-card h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    overflow-wrap: anywhere;
+}
+
+.product-description {
+    flex: 1;
+    margin: 0.75rem 0 1.5rem;
+    color: var(--shop-muted);
+    overflow-wrap: anywhere;
+}
+
+.product-price {
+    margin: 0 0 1.25rem;
+    font-size: 1.8rem;
+    font-weight: 750;
+    letter-spacing: -0.03em;
+}
+
+.product-price span {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--shop-muted);
+    letter-spacing: normal;
+}
+
+.product-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.product-form .button {
+    flex: 1;
+}
+
+.quantity-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    color: var(--shop-muted);
+    font-size: 0.8rem;
+}
+
+.quantity-field input {
+    width: 4.5rem;
+    height: 44px;
+    padding: 0.5rem;
+    border: 1px solid var(--shop-border);
+    border-radius: 0.5rem;
+    background: white;
+    color: var(--shop-text);
+    font-size: 1rem;
+}
+
+.notice {
+    margin: 0 0 1.5rem;
+    padding: 1rem 1.2rem;
+    border-radius: 0.75rem;
+}
+
+.notice-success {
+    background: #e6f0e5;
+    color: #21472e;
+}
+
+.notice-error {
+    background: #fff0ed;
+    color: #8b2525;
+}
+
+.notice a {
+    margin-left: 0.5rem;
+    font-weight: 600;
+}
+
+.empty-state {
+    padding: 2rem;
+    background: white;
+    border: 1px solid var(--shop-border);
+    border-radius: 1rem;
+}
+
+.empty-state h3 {
+    margin-top: 0;
+}
+
+.site-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--shop-border);
+    color: var(--shop-muted);
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 600px) {
+    .site-header-inner {
+        padding: 1rem;
+    }
+
+    .page-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .catalog-intro {
+        padding-top: 2.5rem;
+    }
+
+    .account-status {
+        display: none;
+    }
+}
+
+.login-modal {
+    width: min(460px, calc(100% - 2rem));
+    max-height: calc(100dvh - 2rem);
+    margin: auto;
+    padding: 2rem;
+    border: 1px solid var(--shop-border);
+    border-radius: 1.25rem;
+    background: var(--shop-surface);
+    color: var(--shop-text);
+    box-shadow: 0 24px 80px rgb(0 0 0 / 20%);
+    overflow-y: auto;
+}
+
+.login-modal::backdrop {
+    background: rgb(0 0 0 / 40%);
+}
+
+.login-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.login-modal-header .eyebrow {
+    margin: 0;
+}
+
+.login-modal h2,
+.login-page-card h1 {
+    margin: 0;
+    font-size: 2rem;
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+}
+
+.login-description {
+    margin: 1rem 0 1.5rem;
+    color: var(--shop-muted);
+}
+
+.login-form {
+    display: grid;
+    gap: 1rem;
+}
+
+.login-form label {
+    display: grid;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.login-form input {
+    width: 100%;
+    min-height: 46px;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid var(--shop-border);
+    border-radius: 0.6rem;
+    background: white;
+    color: var(--shop-text);
+}
+
+.login-form .button {
+    margin-top: 0.5rem;
+}
+
+.login-note {
+    margin: 1.5rem 0 0;
+    color: var(--shop-muted);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.login-page {
+    width: min(500px, 100%);
+    margin: 4rem auto;
+    padding: 0 1rem;
+}
+
+.login-back {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+.login-page-card {
+    padding: 2rem;
+    border: 1px solid var(--shop-border);
+    border-radius: 1.25rem;
+    background: var(--shop-surface);
+}
+
+@media (max-width: 480px) {
+    .login-modal,
+    .login-page-card {
+        padding: 1.25rem;
+    }
+}
