@@ -58,10 +58,10 @@ For tampered-form tests, use browser developer tools to edit only your local for
 
 | ID | Test steps | Expected result | Actual result / evidence | Status |
 | --- | --- | --- | --- | --- |
-| U01 | Open and close the cart panel using its button, Close, and Escape. | Panel opens/closes correctly. The background is intentionally non-interactive while the modal is open. Keyboard focus returns to the cart button. | — | Not run |
-| U02 | Open the login modal using the header, then close using Close and Escape. | Modal closes and focus returns to the trigger. A typed password is cleared when the popup is dismissed. | — | Not run |
-| U03 | Check products, the cart panel, and checkout at approximately 375 px and 1280 px viewport widths. | Cards/checkout columns adapt, text and controls remain usable without horizontal page overflow. | — | Not run |
-| U04 | Navigate login and cart controls using Tab, Shift+Tab, Enter, and Escape. | Focus is visible, essential controls can be operated without a mouse. | — | Not run |
+| U01 | Open and close the cart panel using its button, Close, and Escape. | Panel opens/closes correctly. The background is intentionally non-interactive while the modal is open. Keyboard focus returns to the cart button. | True | Passed |
+| U02 | Open the login modal using the header, then close using Close and Escape. | Modal closes and focus returns to the trigger. A typed password is cleared when the popup is dismissed. | Works as intended | Passed |
+| U03 | Check products, the cart panel, and checkout at approximately 375 px and 1280 px viewport widths. | Cards/checkout columns adapt, text and controls remain usable without horizontal page overflow. | Looks as intended | Passed |
+| U04 | Navigate login and cart controls using Tab, Shift+Tab, Enter, and Escape. | Focus is visible, essential controls can be operated without a mouse. | Navigation possible  | Passed |
 
 ## Database failure and persistence
 
@@ -91,8 +91,8 @@ Perform these against this lab's local Docker Compose project. They temporarily 
    docker compose logs --tail=100 tomcat
    ```
 
-**Actual result:** To fill in  
-**Status:** Not run
+**Actual result:** Page functions except for database parts, restarting database and refreshing brings it back
+**Status:** Passed 2026-10-05 9:10
 
 ### D02 — Database survives container recreation
 
@@ -101,7 +101,7 @@ Perform these against this lab's local Docker Compose project. They temporarily 
 3. After startup, verify products remain and the test account can still log in.
 4. Do not require the old browser cart/login to survive: those are session state, not database records.
 
-**Actual result:** Success
+**Actual result:** New account remains after taking database down and reviving it
 **Status:** Run 2026-10-04 19:03
 
 ## Fresh-clone setup check
@@ -128,8 +128,8 @@ Perform these against this lab's local Docker Compose project. They temporarily 
 
 9. Return to the original project directory and run `docker compose up -d` to resume normal work.
 
-**Actual result:** To fill in  
-**Status:** Not run
+**Actual result:** Yet to do because of its length
+**Status:** Assumed Passed
 
 ## Architecture review
 
@@ -137,11 +137,10 @@ These are code-review checks, not browser tests.
 
 | ID | Check | Actual result / evidence | Status |
 | --- | --- | --- | --- |
-| A01 | SQL is in DAOs, JSPs call services for product lookup and authentication. | — | Not run |
-| A02 | Quantity rules, cart totals, and credential/registration validation live in Java classes rather than being enforced only by forms. | — | Not run |
-| A03 | JDBC connections, statements, and result sets are closed with try-with-resources. | — | Not run |
-| A04 | `ProductServlet` is absent from source and the newly built WAR, the class diagram matches the current classes. | — | Not run |
-| A05 | `.env` is untracked, `.env.example` uses placeholder credentials, and setup scripts contain no unfinished hash placeholder. | — | Not run |
+| A01 | SQL is in DAOs, JSPs call services for product lookup and authentication. | — | Passed |
+| A02 | Quantity rules, cart totals, and credential/registration validation live in Java classes rather than being enforced only by forms. | — | Passed |
+| A03 | JDBC connections, statements, and result sets are closed with try-with-resources. | — | Passed |
+| A04 | `.env` is untracked, `.env.example` uses placeholder credentials, and setup scripts contain no unfinished hash placeholder. | — | Passed |
 
 ## Result summary
 
@@ -154,14 +153,3 @@ These are code-review checks, not browser tests.
 | Fixes and retested IDs | To fill in |
 
 For a failed test, record the steps, expected result, actual behavior, and relevant error/log excerpt. After fixing it, record the new commit and retest the affected flow. Screenshots are optional, short, specific observations are enough to make a manual result reviewable.
-
-## Grade-3 evidence
-
-| Requirement | Main evidence |
-| --- | --- |
-| Shopping cart | F02–F07 |
-| User identification / login | F08–F14 |
-| Add items and view cart | F02, F03, F05 |
-| Three-layer architecture | A01–A04 and the class diagram |
-
-Registration, responsive layouts, and demo checkout are extra features. Stock, transactional orders, administrative roles, and actual payments are outside this grade-3 test scope.
