@@ -29,13 +29,13 @@ Unless stated otherwise, the product data used below is the original seeded Keyb
 | F06 | Remove the Mouse, then remove the Keyboard. | Mouse removal leaves a total of 1,197 SEK. Removing the final item shows the empty-cart view. | Works as intended | Passed |
 | F07 | Add one item, note its quantity, and refresh the resulting page several times. | Refresh does not repeat the add operation or change the quantity. | Refreshes does not change the amount | Passed |
 | F08 | As a guest, open the login modal and submit a wrong password, also try an unknown username. | The modal reopens with the generic incorrect-credentials message. The session remains a guest. | Session is guest after failed login | Passed |
-| F09 | With a non-empty guest cart, log in with valid credentials through the modal. | Signed-in controls appear, cart contents and totals are retained. | — | Not run |
-| F10 | In a separate guest session with an item in its cart, open checkout and use its sign-in form. | The account section is replaced by delivery and payment options. The cart is retained. | — | Not run |
-| F11 | In a guest checkout, register an unused username, such as `labtest_01`, with a matching password of at least 15 characters. | Account is created, user is signed in, and the guest cart is retained. Record the username only, not its password. | — | Not run |
-| F12 | Log out, then log in again using the newly registered account. | Login succeeds, showing that the account was stored. The previous session cart is not restored, persistent carts are not implemented. | — | Not run |
-| F13 | Log out from a signed-in session containing cart items. | User becomes a guest and the session cart is cleared. Revisiting checkout with a new item displays account controls. | — | Not run |
-| F14 | Use a normal browser window with a cart and a private window with a different cart. Sign in in only one window. | Cart contents and login state remain independent between the two sessions. | — | Not run |
-| F15 | As a signed-in user, fill delivery fields and switch among Card, Swish, and Invoice. | Choices change visually, the page identifies checkout as a demo. Place order remains disabled, no order/payment is submitted. | — | Not run |
+| F09 | With a non-empty guest cart, log in with valid credentials through the modal. | Signed-in controls appear, cart contents and totals are retained. | cart remains after sign in | Passed |
+| F10 | In a separate guest session with an item in its cart, open checkout and use its sign-in form. | The account section is replaced by delivery and payment options. The cart is retained. | Payment and delivery options appear | Passed |
+| F11 | In a guest checkout, register an unused username, such as `labtest_01`, with a matching password of at least 15 characters. | Account is created, user is signed in, and the guest cart is retained. Record the username only, not its password. | username neo2 created at checkout, cart retained | Passed |
+| F12 | Log out, then log in again using the newly registered account. | Login succeeds, showing that the account was stored. The previous session cart is not restored, persistent carts are not implemented. | Login success but cart deleted | Passed |
+| F13 | Log out from a signed-in session containing cart items. | User becomes a guest and the session cart is cleared. Revisiting checkout with a new item displays account controls. | Cart is empty after sign out | Passed |
+| F14 | Use a normal browser window with a cart and a private window with a different cart. Sign in in only one window. | Cart contents and login state remain independent between the two sessions. | Independent sessions show | Passed |
+| F15 | As a signed-in user, fill delivery fields and switch among Card, Swish, and Invoice. | Choices change visually, the page identifies checkout as a demo. Place order remains disabled, no order/payment is submitted. | Fields work with no problem | Passed |
 
 ## Server-side validation and request handling
 
