@@ -173,6 +173,14 @@ SQL belongs in DAOs not JSP pages. Services and models do not depend on servlet 
 
 Source code is in `src/se/kth/webshop/`. Web resources are in `web/`, shared JSP fragments in `web/WEB-INF/views/` and database setup scripts in `sql/`.
 
+## Class diagram
+
+See [the class diagram and architecture explanation](docs/class-diagram.md).
+
+## Testing
+
+See [the manual test record](docs/testing.md).
+
 ## Database and session behavior
 
 The `products` table contains product IDs, unique names, descriptions and non-negative prices. The `users` table contains user IDs, unique usernames and password hashes. Exact column definitions are in the SQL scripts.
