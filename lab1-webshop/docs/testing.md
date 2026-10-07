@@ -165,3 +165,20 @@ For a failed test, record the steps, expected result, actual behavior, and relev
 | Three-layer architecture | A01–A04 and the class diagram |
 
 Registration, responsive layouts, and demo checkout are extra features. Stock, transactional orders, administrative roles, and actual payments are outside this grade-3 test scope.
+
+## DTO boundary regression checks
+
+The presentation now receives `ProductDTO`, `UserDTO`, and `CartDTO`/`CartItemDTO` snapshots. DAOs still return internal models to services. The session stores `CartService`, which owns the internal cart.
+
+After packaging, run the standalone checks from `lab1-webshop` with a JDK:
+
+```text
+mvn package
+java -ea -cp target/classes tests/se/kth/webshop/service/DtoBoundaryTest.java
+```
+
+These checks use fake DAOs and do not need PostgreSQL. They check product mapping, collection immutability, independent cart snapshots after updates/removals, separate cart services, quantity/product validation, authentication/registration mapping, and omission of password accessors from `UserDTO`. They are standalone checks, not automatically executed by `mvn test`.
+
+The Java sources and these checks passed with an Eclipse Java compiler targeting Java 17 in the verification workspace. All JSP pages also compiled successfully with Tomcat 11.0.13 Jasper (zero errors, Java 17 target). The project's configured Java 27 Maven build still needs to be run in the development environment.
+
+After deploying the DTO change, repeat F01–F13 above to check the complete database/browser flow. Existing results above describe the earlier implementation, not a new browser run after this change. Start with a fresh session: the session bean name changes from `cart` to `cartService`.

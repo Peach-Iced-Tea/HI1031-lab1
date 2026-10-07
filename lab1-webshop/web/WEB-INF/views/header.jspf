@@ -14,7 +14,7 @@
                     aria-controls="cart-panel">
                 <span aria-hidden="true">&#128722;</span>
                 Cart
-                <span class="cart-badge"><%= cart.getItemCount() %></span>
+                <span class="cart-badge"><%= cartView.getItemCount() %></span>
             </button>
         </nav>
     </div>

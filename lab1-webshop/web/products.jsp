@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="java.util.List,se.kth.webshop.model.Product" %>
+<%@ page import="java.util.List,se.kth.webshop.dto.ProductDTO" %>
 <%@ include file="/WEB-INF/views/cart-session.jspf" %>
 
 <jsp:useBean id="productService"
@@ -23,7 +23,7 @@
 <%
     response.setHeader("Cache-Control", "no-store");
 
-    List<Product> products = List.of();
+    List<ProductDTO> products = List.of();
     boolean loadFailed = false;
 
     try {
@@ -95,7 +95,7 @@
             </div>
         <% } else { %>
             <div class="product-grid">
-                <% for (Product product : products) { %>
+                <% for (ProductDTO product : products) { %>
                     <article class="product-card">
                         <div class="product-card-body">
                             <h3><%= escapeHtml(product.getName()) %></h3>

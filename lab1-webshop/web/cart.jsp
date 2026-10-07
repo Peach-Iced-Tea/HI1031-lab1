@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="java.util.List,se.kth.webshop.model.CartItem" %>
+<%@ page import="java.util.List,se.kth.webshop.dto.CartItemDTO" %>
 <%@ include file="/WEB-INF/views/cart-session.jspf" %>
 
 <%!
@@ -20,15 +20,10 @@
     response.setHeader("Cache-Control", "no-store");
 
     boolean signedIn = session.getAttribute("userId") != null;
-    List<CartItem> checkoutItems = cart.getItems();
+    List<CartItemDTO> checkoutItems = cartView.getItems();
 
-    long checkoutTotal = 0;
-    int checkoutCount = 0;
-
-    for (CartItem item : checkoutItems) {
-        checkoutTotal += item.getSubtotal();
-        checkoutCount += item.getQuantity();
-    }
+    long checkoutTotal = cartView.getTotal();
+    int checkoutCount = cartView.getItemCount();
 
     String accountErrorCode = request.getParameter("accountError");
     String accountErrorMessage = null;
@@ -329,12 +324,12 @@
                     </p>
 
                     <ul class="checkout-items">
-                        <% for (CartItem item : checkoutItems) { %>
+                        <% for (CartItemDTO item : checkoutItems) { %>
                             <li class="checkout-item">
                                 <div class="checkout-item-heading">
                                     <h3>
                                         <%= escapeHtml(
-                                            item.getProduct().getName()
+                                            item.getName()
                                         ) %>
                                     </h3>
                                     <strong>
@@ -343,7 +338,7 @@
                                 </div>
 
                                 <p class="checkout-muted">
-                                    <%= item.getProduct().getPrice() %> SEK each
+                                    <%= item.getPrice() %> SEK each
                                 </p>
 
                                 <div class="checkout-item-controls">
@@ -356,7 +351,7 @@
                                         <input type="hidden" name="returnTo"
                                                value="cart">
                                         <input type="hidden" name="productId"
-                                               value="<%= item.getProduct().getId() %>">
+                                               value="<%= item.getProductId() %>">
 
                                         <label>
                                             Quantity
@@ -379,7 +374,7 @@
                                         <input type="hidden" name="returnTo"
                                                value="cart">
                                         <input type="hidden" name="productId"
-                                               value="<%= item.getProduct().getId() %>">
+                                               value="<%= item.getProductId() %>">
 
                                         <button type="submit"
                                                 class="checkout-remove">

@@ -1,6 +1,6 @@
 # Webshop class diagram
 
-This diagram describes the Java classes developed for the grade-3 webshop. It is based on the implementation discussed during development check class names and signatures against the submitted source. Constructors, most getters, private helpers, and the password-hash command-line utility are omitted for readability.
+This diagram describes the Java classes developed for the grade-3 webshop. Constructors, most getters, private helpers, and the password-hash command-line utility are omitted for readability.
 
 ## Java classes
 
@@ -41,20 +41,22 @@ classDiagram
 
     class ProductService {
         -ProductDao productDao
-        +getProducts() List~Product~
+        +getProducts() List~ProductDTO~
     }
 
     class CartService {
         -ProductDao productDao
-        +add(Cart cart, int productId, int quantity) void
-        +update(Cart cart, int productId, int quantity) void
-        +remove(Cart cart, int productId) void
+        -Cart cart
+        +add(int productId, int quantity) void
+        +update(int productId, int quantity) void
+        +remove(int productId) void
+        +getSnapshot() CartDTO
     }
 
     class AuthService {
         -UserDao userDao
-        +authenticate(String username, String password) User
-        +register(String username, String password, String confirmation) User
+        +authenticate(String username, String password) UserDTO
+        +register(String username, String password, String confirmation) UserDTO
     }
 
     class ProductDao {
@@ -76,6 +78,33 @@ classDiagram
         +verify(char[] password, String stored) boolean
     }
 
+    class ProductDTO {
+        -int id
+        -String name
+        -String description
+        -int price
+    }
+    class UserDTO {
+        -int id
+        -String username
+    }
+    class CartItemDTO {
+        -int productId
+        -String name
+        -int price
+        -int quantity
+        -long subtotal
+    }
+    class CartDTO {
+        -List items
+        -int itemCount
+        -long total
+    }
+    ProductService ..> ProductDTO : returns snapshots
+    AuthService ..> UserDTO : returns safe identity
+    CartService ..> CartDTO : returns snapshot
+    CartDTO "1" *-- "0..*" CartItemDTO : contains
+
     Cart "1" *-- "0..*" CartItem : owns
     CartItem --> "1" Product : references
 
@@ -83,9 +112,9 @@ classDiagram
     CartService --> "1" ProductDao : holds
     AuthService --> "1" UserDao : holds
 
-    CartService ..> Cart : modifies
+    CartService "1" *-- "1" Cart : owns
     AuthService ..> Passwords : hashes and verifies
-    AuthService ..> User : returns
+    AuthService ..> User : verifies internally
 
     ProductDao ..> Database : opens connection
     UserDao ..> Database : opens connection
@@ -93,7 +122,7 @@ classDiagram
     UserDao ..> User : creates from rows
 ```
 
-The `items` field is a `Map<Integer, CartItem>`, abbreviated to `Map` for Mermaid compatibility. `Database.getConnection()`, `Passwords.hash()`, and `Passwords.verify()` are static methods. Public no-argument constructors on `Cart` and the service classes allow their use with `jsp:useBean`.
+The `items` field is a `Map<Integer, CartItem>`, abbreviated to `Map` for Mermaid compatibility. `Database.getConnection()`, `Passwords.hash()`, and `Passwords.verify()` are static methods. Public no-argument constructors on the service classes allow their use with `jsp:useBean`. DTOs have final fields, getters, and no setters.
 
 ## Relationship notation
 
@@ -121,7 +150,7 @@ JSP files are presentation resources, not Java source classes written for this a
 | Business/domain | `ProductService`, `CartService`, `AuthService`, `Cart`, `CartItem`, `Product`, `User`, `Passwords` | Coordinate operations, validate business rules, authenticate users, and represent domain data |
 | Data access | `ProductDao`, `UserDao`, `Database` | Execute SQL through JDBC and map database rows to Java objects |
 
-Models are used across layer boundaries they do not constitute a separate fourth layer. `Passwords` is a standard-Java utility used by authentication logic. There is no `ProductServlet` or custom controller class in the current implementation.
+DAOs return models to services. Services copy selected values into immutable DTOs for presentation; no JSP receives a `Product`, `User`, or `CartItem` model. DTOs are transfer contracts, not a separate fourth layer. `Passwords` is a standard-Java utility used by authentication logic. There is no `ProductServlet` or custom controller class in the current implementation.
 
 ### Presentation entry points
 
@@ -129,27 +158,27 @@ Models are used across layer boundaries they do not constitute a separate fourth
 | --- | --- |
 | `products.jsp` | Calls `ProductService` to retrieve products renders cards and shared dialogs |
 | `cart-action.jsp` | Validates the HTTP method/form token, calls `CartService`, and redirects |
-| `cart.jsp` | Reads the session cart displays account forms or demo delivery/payment sections |
+| `cart.jsp` | Reads a cart DTO snapshot and displays account forms or demo delivery/payment sections |
 | `login.jsp` | Calls `AuthService.authenticate()` sets identification attributes after success |
 | `checkout-account.jsp` | Calls `AuthService.authenticate()` or `register()` preserves the cart on success |
 | `logout.jsp` | Validates the request and invalidates the session |
 | `checkout.jsp` | Redirects to the checkout interface in `cart.jsp` |
-| `cart-session.jspf` | Retrieves/creates the session-scoped `Cart` and form token |
+| `cart-session.jspf` | Retrieves/creates the session-scoped `CartService`, gets a `CartDTO` snapshot, and manages the form token |
 
 ## Request examples for the presentation
 
-**List products:** `products.jsp` calls `ProductService.getProducts()`. The service calls `ProductDao.findAll()`. The DAO opens a JDBC connection through `Database`, executes its query, and creates `Product` objects. The JSP displays the returned list.
+**List products:** `products.jsp` calls `ProductService.getProducts()`. The service calls `ProductDao.findAll()`. The DAO opens a JDBC connection through `Database`, executes its query, and creates `Product` objects. The service copies each model to a `ProductDTO`; the JSP displays that snapshot list.
 
 **Add a product:** `cart-action.jsp` reads the product ID and quantity and calls `CartService.add()`. The service uses `ProductDao.findById()` to retrieve the server-side product and price, then calls `Cart.add()`. The cart validates quantities and updates its entries. The JSP redirects the browser after the operation.
 
-**Log in:** A JSP passes credentials to `AuthService.authenticate()`. The service retrieves a `User` through `UserDao` and verifies the password through `Passwords`. On success, the JSP changes the session ID and stores the user ID and username. The existing cart is retained the password hash is not stored in the session.
+**Log in:** A JSP passes credentials to `AuthService.authenticate()`. The service retrieves a `User` through `UserDao` and verifies the password through `Passwords`. On success, the service returns a `UserDTO` containing only ID and username. The JSP changes the session ID and stores the user ID and username. The existing cart is retained the password hash is not stored in the session.
 
-**Register:** `checkout-account.jsp` calls `AuthService.register()`. The service validates the input and hashes the password, then calls `UserDao.create()`. The DAO inserts the account and returns its generated ID with the user data. The JSP establishes the authenticated session.
+**Register:** `checkout-account.jsp` calls `AuthService.register()`. The service validates the input and hashes the password, then calls `UserDao.create()`. The DAO inserts the account and returns its generated ID with the user data. The service converts the returned model to a `UserDTO` before the JSP establishes the authenticated session.
 
 ## State and scope
 
-- `Cart` is session-scoped separate browser sessions have separate carts.
-- Service beans instantiated with `scope="page"` are created for that page request, not shared across every user.
+- `CartService` is session-scoped and owns a private `Cart`; separate sessions have separate carts.
+- `ProductService` and `AuthService` are page-scoped. `CartService` is session-scoped. All are independent of servlet APIs.
 - Services hold DAO references DAOs open and close connections per operation instead of retaining a shared connection field.
 - Users and products are stored in PostgreSQL. Cart items are held in the HTTP session and are not persisted in the database.
 - Prices use integer SEK values. Subtotals and totals use `long`.
