@@ -151,7 +151,9 @@ docker compose down
 | Business/domain | `ProductService`, `CartService`, `AuthService`, domain models, `Passwords` | Coordinate operations, validate credentials and quantities, manage cart contents and totals |
 | Data access | `ProductDao`, `UserDao`, `Database` | Execute SQL through JDBC and map results to Java objects |
 
-For example adding an item follows `cart-action.jsp` -> `CartService` -> `ProductDao` -> PostgreSQL. The service obtains the product from the DAO and adds it to the session's `Cart`. The JSP then redirects the browser.
+For example adding an item follows `cart-action.jsp` -> `CartService` -> `ProductDao` -> PostgreSQL. The service obtains the product from the DAO and adds it to the internal `Cart` owned by the session-scoped `CartService`. The JSP then redirects the browser.
+
+Services return immutable DTOs to JSPs. DAOs still return internal models to services. Each DTO copies selected values: later model changes do not alter an earlier snapshot. `UserDTO` omits the password hash. `CartService.getSnapshot()` copies items, count and total under the same cart lock, and `CartDTO` defensively copies its item list.
 
 SQL belongs in DAOs not JSP pages. Services and models do not depend on servlet classes. Separate MVC controllers are not used in this implementation.
 
@@ -163,8 +165,11 @@ SQL belongs in DAOs not JSP pages. Services and models do not depend on servlet 
 | `CartItem` | Product, quantity, and subtotal |
 | `Cart` | Cart entries, quantity limits, item count, and total |
 | `User` | User data and stored password hash passed to authentication logic |
-| `ProductService` | Provides the product list |
-| `CartService` | Coordinates adding, updating, and removing cart items |
+| `ProductDTO` | Immutable product snapshot returned to the JSP |
+| `UserDTO` | User ID and username only; never contains a password hash |
+| `CartItemDTO`, `CartDTO` | Immutable cart display snapshots, with no domain references |
+| `ProductService` | Converts DAO products to product DTOs |
+| `CartService` | Owns the session cart, handles changes, and returns cart snapshots |
 | `AuthService` | Authenticates users and validates registration |
 | `ProductDao` | Retrieves all products or a product by ID |
 | `UserDao` | Looks up and creates users |
@@ -175,7 +180,7 @@ Source code is in `src/se/kth/webshop/`. Web resources are in `web/`, shared JSP
 
 ## Class diagram
 
-See [the class diagram and architecture explanation](docs/class-diagram.md).
+See [the class diagram and architecture explanation](docs/class_diagram.md).
 
 ## Testing
 
@@ -185,7 +190,7 @@ See [the manual test record](docs/testing.md).
 
 The `products` table contains product IDs, unique names, descriptions and non-negative prices. The `users` table contains user IDs, unique usernames and password hashes. Exact column definitions are in the SQL scripts.
 
-The HTTP session stores the cart, form token, and after login also the user ID and username. Password hashes are not stored in the session.
+The HTTP session stores the cart service (which owns the cart), form token, and after login also the user ID and username. Password hashes are not stored in the session.
 
 - Guests can browse, add, update and remove items.
 - Adding the same product increases its quantity, each product is limited to 1–99 units. This is a validation rule not stock tracking.

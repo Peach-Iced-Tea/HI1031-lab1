@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"
          trimDirectiveWhitespaces="true" %>
-<%@ page import="se.kth.webshop.model.User" %>
+<%@ page import="se.kth.webshop.dto.UserDTO" %>
 <%@ include file="/WEB-INF/views/cart-session.jspf" %>
 
 <jsp:useBean id="authService"
@@ -25,7 +25,7 @@
         }
 
         try {
-            User user = authService.authenticate(
+            UserDTO user = authService.authenticate(
                 request.getParameter("username"),
                 request.getParameter("password")
             );
