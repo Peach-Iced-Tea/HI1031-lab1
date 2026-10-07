@@ -3,10 +3,6 @@
          trimDirectiveWhitespaces="true" %>
 <%@ include file="/WEB-INF/views/cart-session.jspf" %>
 
-<jsp:useBean id="cartService"
-             class="se.kth.webshop.service.CartService"
-             scope="page" />
-
 <%
     if (!"POST".equals(request.getMethod())) {
         response.setHeader("Allow", "POST");
@@ -32,12 +28,12 @@
 
         if ("add".equals(action)) {
             int quantity = Integer.parseInt(request.getParameter("quantity"));
-            cartService.add(cart, productId, quantity);
+            cartService.add(productId, quantity);
         } else if ("update".equals(action)) {
             int quantity = Integer.parseInt(request.getParameter("quantity"));
-            cartService.update(cart, productId, quantity);
+            cartService.update(productId, quantity);
         } else if ("remove".equals(action)) {
-            cartService.remove(cart, productId);
+            cartService.remove(productId);
         } else {
             throw new IllegalArgumentException("Unknown cart action.");
         }

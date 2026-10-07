@@ -1,8 +1,10 @@
-<jsp:useBean id="cart"
-             class="se.kth.webshop.model.Cart"
+<jsp:useBean id="cartService"
+             class="se.kth.webshop.service.CartService"
              scope="session" />
 
 <%
+    se.kth.webshop.dto.CartDTO cartView = cartService.getSnapshot();
+
     String cartToken;
 
     synchronized (session) {

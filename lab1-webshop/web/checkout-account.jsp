@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"
          trimDirectiveWhitespaces="true" %>
-<%@ page import="se.kth.webshop.model.User" %>
+<%@ page import="se.kth.webshop.dto.UserDTO" %>
 <%@ include file="/WEB-INF/views/cart-session.jspf" %>
 
 <jsp:useBean id="authService"
@@ -29,7 +29,7 @@
     if (session.getAttribute("userId") == null) {
         try {
             String action = request.getParameter("action");
-            User user;
+            UserDTO user;
 
             if ("register".equals(action)) {
                 user = authService.register(

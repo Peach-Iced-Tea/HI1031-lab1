@@ -4,16 +4,22 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 import se.kth.webshop.dao.UserDao;
+import se.kth.webshop.dto.UserDTO;
 import se.kth.webshop.model.User;
 import se.kth.webshop.security.Passwords;
 
 public class AuthService {
-    private final UserDao userDao = new UserDao();
+    private final UserDao userDao;
 
     public AuthService() {
+        this(new UserDao());
     }
 
-    public User authenticate(String username, String password) {
+    AuthService(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public UserDTO authenticate(String username, String password) {
         if (username == null || username.isBlank()
                 || username.length() > 50
                 || password == null || password.isEmpty()
@@ -29,7 +35,7 @@ public class AuthService {
             if (user != null
                     && Passwords.verify(
                         passwordCharacters, user.getPasswordHash())) {
-                return user;
+                return new UserDTO(user.getId(), user.getUsername());
             }
 
             return null;
@@ -39,7 +45,7 @@ public class AuthService {
             Arrays.fill(passwordCharacters, '\0');
         }
     }
-    public User register(String username, String password, String confirmation) {
+    public UserDTO register(String username, String password, String confirmation) {
         if (username == null) {
             throw new IllegalArgumentException("Invalid username.");
         }
@@ -60,7 +66,8 @@ public class AuthService {
 
         try {
             String passwordHash = Passwords.hash(characters);
-            return userDao.create(cleanedUsername, passwordHash);
+            User user = userDao.create(cleanedUsername, passwordHash);
+            return new UserDTO(user.getId(), user.getUsername());
         } catch (SQLException e) {
             if ("23505".equals(e.getSQLState())) {
                 throw new IllegalArgumentException("Username is unavailable.", e);

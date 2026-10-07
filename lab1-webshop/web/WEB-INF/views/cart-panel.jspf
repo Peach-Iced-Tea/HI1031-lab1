@@ -1,10 +1,6 @@
 <%
-    var panelItems = cart.getItems();
-    long panelTotal = 0;
-
-    for (var panelItem : panelItems) {
-        panelTotal += panelItem.getSubtotal();
-    }
+    var panelItems = cartView.getItems();
+    long panelTotal = cartView.getTotal();
 %>
 
 <dialog id="cart-panel" class="cart-panel"
@@ -31,11 +27,11 @@
             <% for (var panelItem : panelItems) { %>
                 <li class="cart-item">
                     <h3>
-                        <%= escapeHtml(panelItem.getProduct().getName()) %>
+                        <%= escapeHtml(panelItem.getName()) %>
                     </h3>
 
                     <p>
-                        <%= panelItem.getProduct().getPrice() %> SEK each
+                        <%= panelItem.getPrice() %> SEK each
                     </p>
 
                     <form action="cart-action.jsp" method="post"
@@ -46,7 +42,7 @@
                         <input type="hidden" name="action" value="update">
                         <input type="hidden" name="returnTo" value="products">
                         <input type="hidden" name="productId"
-                               value="<%= panelItem.getProduct().getId() %>">
+                               value="<%= panelItem.getProductId() %>">
 
                         <label>
                             Quantity
@@ -70,7 +66,7 @@
                             <input type="hidden" name="returnTo"
                                    value="products">
                             <input type="hidden" name="productId"
-                                   value="<%= panelItem.getProduct().getId() %>">
+                                   value="<%= panelItem.getProductId() %>">
 
                             <button type="submit" class="cart-remove">
                                 Remove
